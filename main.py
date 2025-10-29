@@ -1,3 +1,5 @@
+## Version 1.0
+
 from dotenv import load_dotenv
 
 import os, getpass, sys
@@ -5,9 +7,6 @@ import os, getpass, sys
 from modules.crypt import (
     generate_key,
     intialise_cipher,
-    encrypt_password,
-    decrypt_password,
-    hash_master_password,
     encode_data,
     decode_data,
     store_environment_variables,
@@ -16,9 +15,9 @@ from modules.crypt import (
 
 from modules.user import (
     load_menu,
-    generate_table,
     register_user,
     user_login,
+    view_services,
     view_credentials,
     view_single_credential,
     add_credential,
@@ -85,17 +84,14 @@ while True:
     user_input = input("Please Enter a Selection: ")
 
     if user_input == "1":
-        entries = view_credentials(cipher)
-        generate_table(entries, cipher, "All Credentials")
+        view_services()
 
     if user_input == "2":
         service = input("Enter The Service You Would Like To View: ")
-        entry = view_single_credential(cipher, service)
-        table_name = service + " Credentials"
-        generate_table(entry, cipher, table_name)
+        view_single_credential(cipher, service)
 
     if user_input == "3":
-        1 - 1
+        view_credentials(cipher)
 
     if user_input == "4":
         website = input("Please Enter The Website You Wish To Add: ")
@@ -108,4 +104,4 @@ while True:
             print("Passwords Don't Match, Please Try Again.")
 
     if user_input == "5":
-        1 - 1
+        sys.exit()
