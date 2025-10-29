@@ -1,4 +1,4 @@
-import json, os
+import json, os, sys
 from rich.console import Console
 from rich.table import Table
 from modules.crypt import hash_master_password, encrypt_password, decrypt_password
@@ -7,10 +7,12 @@ from storage.constants import USER_JSON, PASSWORD_JSON, COLUMNS
 
 def load_menu():
     print("[1] View All Stored Services")
-    print("[2] View Credentials for a Websites")
+    print("[2] View Credentials for a Website")
     print("[3] View All Credentials")
     print("[4] Add a New Credential")
-    print("[5] Exit Program")
+    print("[5] Update a Credential")
+    print("[6] Delete a Credential")
+    print("[7] Exit Program")
 
 
 def register_user(username, password, salt, art, filename=USER_JSON):
@@ -164,3 +166,47 @@ def add_credential(website, username, password, cipher, filename=PASSWORD_JSON):
 
     with open(filename, "w") as f:
         json.dump(entries, f)
+
+
+def update_credential(service, username, password, cipher, filename=PASSWORD_JSON):
+    if os.path.exists(filename):
+        try:
+            with open(filename, "r") as file:
+                entries = json.load(file)
+        except json.JSONDecodeError:
+            print("Error Reading Passwords File, JSON Malformed or Non-existent.")
+
+    encrypted_password = encrypt_password(cipher, password)
+
+    for entry in entries:
+        website = entry["service"]
+        if website.lower() == service.lower():
+            entry["entry"]["username"] = username
+            entry["entry"]["password"] = encrypted_password
+            print("Credential Updated")
+
+    with open(filename, "w") as f:
+        json.dump(entries, f)
+
+
+def delete_credential(service, filename=PASSWORD_JSON):
+    if os.path.exists(filename):
+        try:
+            with open(filename, "r") as file:
+                entries = json.load(file)
+        except json.JSONDecodeError:
+            print("Error Reading Passwords File, JSON Malformed or Non-existent.")
+
+    for entry in entries:
+        website = entry["service"]
+        if website.lower() == service.lower():
+            entries.remove(entry)
+
+    with open(filename, "w") as f:
+        json.dump(entries, f)
+
+
+def exiting_program(art):
+    print(art)
+
+    sys.exit()

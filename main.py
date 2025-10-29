@@ -1,8 +1,8 @@
 ## Version 1.0
-
+import os, getpass
 from dotenv import load_dotenv
 
-import os, getpass, sys
+from storage.ascii_art import KEYSHADE, REGISTRATION_COMPLETE, LOGIN_SUCCESSFUL, GOODBYE
 
 from modules.crypt import (
     generate_key,
@@ -21,9 +21,10 @@ from modules.user import (
     view_credentials,
     view_single_credential,
     add_credential,
+    update_credential,
+    delete_credential,
+    exiting_program,
 )
-
-from storage.ascii_art import KEYSHADE, REGISTRATION_COMPLETE, LOGIN_SUCCESSFUL
 
 try:
     load_dotenv()
@@ -66,7 +67,11 @@ while bypass is True:
     if user_input == "1":
         username = input("Please Enter Your Master Username: ")
         password = getpass.getpass("Please Enter Your Master Password: ")
-        register_user(username, password, salt, REGISTRATION_COMPLETE)
+        confirm_password = getpass.getpass("Please Confirm Your Master Password: ")
+        if confirm_password == password:
+            register_user(username, password, salt, REGISTRATION_COMPLETE)
+        else:
+            print("Passwords Don't Match! Try Again.")
 
     elif user_input == "2":
         username = input("Please Enter Your Master Username: ")
@@ -76,7 +81,7 @@ while bypass is True:
             bypass = False
 
     elif user_input == "3":
-        sys.exit()
+        exiting_program(GOODBYE)
 
 load_menu()
 
@@ -104,4 +109,14 @@ while True:
             print("Passwords Don't Match, Please Try Again.")
 
     if user_input == "5":
-        sys.exit()
+        service = input("What Service Would You Like To Update: ")
+        username = input("Enter Your New Username: ")
+        password = getpass.getpass("Enter Your New Password: ")
+        update_credential(service, username, password, cipher)
+
+    if user_input == "6":
+        service = input("What Service Would You Like to Delete: ")
+        delete_credential(service)
+
+    if user_input == "7":
+        exiting_program(GOODBYE)
