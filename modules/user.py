@@ -1,8 +1,9 @@
-import json, os, sys
+import json, os, sys, getpass
 from rich.console import Console
 from rich.table import Table
 from modules.crypt import hash_master_password, encrypt_password, decrypt_password
 from storage.constants import USER_JSON, PASSWORD_JSON, COLUMNS
+from storage.ascii_art import LOGIN_SUCCESSFUL, CREDENTIALS_UPDATED
 
 
 def load_menu():
@@ -16,17 +17,39 @@ def load_menu():
 
 
 def register_user(username, password, salt, art, filename=USER_JSON):
+
     master_password = hash_master_password(password, salt)
     registered_user = {"username": username, "password": master_password}
 
     try:
+        with open(filename, "r") as f:
+            user = json.load(f)
+
+        if user['username'] and user['password'] is not None:
+            print("Please Verify Old Username and Password")
+            old_username = input("Enter Old Username: ")
+            old_password = getpass.getpass("Enter Old Password: ")
+            validated_login = user_login(old_username, old_password, salt, LOGIN_SUCCESSFUL)
+
+            if validated_login == True:
+                print(CREDENTIALS_UPDATED)
+                with open(filename, "w") as f:
+                    json.dump(registered_user, f)
+            else:
+                print("Old Password Incorrect.")
+                return 0
+    except FileNotFoundError:
         with open(filename, "x") as f:
             json.dump(registered_user, f)
-    except FileExistsError:
+            print(art)
+    except json.JSONDecodeError:
         with open(filename, "w") as f:
             json.dump(registered_user, f)
-
-    print(art)
+            print(art)
+    except Exception:
+        with open(filename, "w") as f:
+            json.dump(registered_user, f)
+            print(art)
 
 
 def user_login(username, password, salt, art, filename=USER_JSON):

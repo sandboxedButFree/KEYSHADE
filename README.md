@@ -26,8 +26,7 @@ python main.py
 
 
 # Future State
-1. Add delete and update functions.
-2. Add SQLite DB.
-3. Make it Multiuser.
-4. Add a Web GUI.
-5. Institute Proper Logging.
+1. Add SQLite DB.
+2. Make it Multiuser.
+3. Add a Web GUI.
+4. Institute Proper Logging.
