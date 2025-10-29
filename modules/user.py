@@ -58,6 +58,10 @@ def user_login(username, password, salt, art, filename=USER_JSON):
             user_details = json.load(file)
     except FileNotFoundError:
         print("Error You Have Not Registered A Master User")
+        return False
+    except json.JSONDecodeError:
+        print("Error You Have Not Registered A Master User")
+        return False
     master_password = hash_master_password(password, salt)
     if (
         user_details["username"] == username
