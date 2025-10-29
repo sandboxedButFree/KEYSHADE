@@ -65,17 +65,16 @@ def view_services(filename=PASSWORD_JSON):
         rows.append(temp_list)
 
     for column in columns:
-            table.add_column(column, style="white")
+        table.add_column(column, style="white")
 
     for row in rows:
-            table.add_row(*row, style="bright_green")
+        table.add_row(*row, style="bright_green")
 
     console = Console()
     console.print(table)
 
     return 0
 
-        
 
 def view_credentials(cipher, filename=PASSWORD_JSON):
     if os.path.exists(filename):
@@ -143,7 +142,7 @@ def view_single_credential(cipher, service, filename=PASSWORD_JSON):
             console = Console()
             console.print(table)
             return 0
-    
+
     print("Service Not Found!")
 
 
