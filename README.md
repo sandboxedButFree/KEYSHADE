@@ -30,3 +30,4 @@ python main.py
 2. Make it Multiuser.
 3. Add a Web GUI.
 4. Institute Proper Logging.
+5. Add unit tests.
